@@ -10,10 +10,10 @@ export class SquareGateway {
         const records = squareSelectResult[0]
 
         return records.map((r) => {
-            const id: number = r[0]['id']
-            const x: number = r[0]['x']
-            const y: number = r[0]['y']
-            const disc: number = r[0]['disc']
+            const id: number = r['id']
+            const x: number = r['x']
+            const y: number = r['y']
+            const disc: number = r['disc']
             return new SquareRecord(id, turnId, x, y, disc)
         })
     }
