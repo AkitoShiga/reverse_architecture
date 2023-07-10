@@ -1,51 +1,45 @@
-import { TurnRecord } from "./turnRecord";
 import mysql from 'mysql2/promise'
+import { TurnRecord } from './turnRecord'
 
 export class TurnGateway {
+  async findForGameIdAndTurnCount(
+    conn: mysql.Connection,
+    gameId: number,
+    turnCount: number
+  ): Promise<TurnRecord | undefined> {
+    const turnSelectResult = await conn.execute<mysql.RowDataPacket[]>(
+      'select id, game_id, turn_count, next_disc, end_at from turns where game_id = ? and turn_count = ?',
+      [gameId, turnCount]
+    )
+    const record = turnSelectResult[0][0]
 
-    // ゲームに紐づくターンを取得する
-    async findForGameIdAndTurnCount(conn: mysql.Connection,
-                                    gameId: number,
-                                    turnCount: number): Promise<TurnRecord | undefined> {
-
-        const record = await conn.execute<mysql.RowDataPacket[]>(
-            'select id, game_id, turn_count, next_disc, end_at from turns where game_id = ? and turn_count = ?',
-            [gameId, turnCount]
-        )
-
-        if (!record) {
-            return undefined
-        }
-        const turnId: number =  record[0][0]['id']
-        const nextDisc: number = record[0][0]['next_disc']
-        const endAt: Date  = record[0][0]['end_at']
-        
-        return new TurnRecord(turnId,
-                              gameId,
-                              turnCount,
-                              nextDisc,
-                              endAt)
+    if (!record) {
+      return undefined
     }
 
-    // ターンを新規作成する
-    async insert(conn: mysql.Connection,
-                 gameId: number,
-                 turnCount: number,
-                 nextDisc: number,
-                 endAt: Date): Promise<TurnRecord | undefined> {
+    return new TurnRecord(
+      record['id'],
+      record['game_id'],
+      record['turn_count'],
+      record['next_disc'],
+      record['end_at']
+    )
+  }
 
-        const turnInsertResult = await conn.execute<mysql.ResultSetHeader>(
-            'insert into turns (game_id, turn_count, next_disc, end_at) values(?, ?, ?, ?)',
-            [gameId, turnCount, nextDisc, endAt])
+  async insert(
+    conn: mysql.Connection,
+    gameId: number,
+    turnCount: number,
+    nextDisc: number | undefined,
+    endAt: Date
+  ): Promise<TurnRecord> {
+    const turnInsertResult = await conn.execute<mysql.ResultSetHeader>(
+      'insert into turns (game_id, turn_count, next_disc, end_at) values (?, ?, ?, ?)',
+      [gameId, turnCount, nextDisc ?? null, endAt]
+    )
 
-        const turnId = turnInsertResult[0].insertId
+    const turnId = turnInsertResult[0].insertId
 
-        if (!turnId) {
-            return undefined
-        }
-
-        return new TurnRecord(turnId, gameId, turnCount, nextDisc, endAt)
-    }
-
-
+    return new TurnRecord(turnId, gameId, turnCount, nextDisc, endAt)
+  }
 }
