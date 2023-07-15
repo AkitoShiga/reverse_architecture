@@ -1,4 +1,4 @@
-import { DomainError } from '../../error/DomainError'
+import { DomainError } from '../../error/domainError'
 
 export const Disc = {
   Empty: 0,

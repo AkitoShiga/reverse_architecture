@@ -2,7 +2,7 @@ import express from 'express'
 import 'express-async-errors'
 import morgan from 'morgan'
 import { ApplicationError } from './application/error/applicationError'
-import { DomainError } from './domain/error/DomainError'
+import { DomainError } from './domain/error/domainError'
 import { gameRouter } from './presentation/gameRouter'
 import { turnRouter } from './presentation/turnRouter'
 

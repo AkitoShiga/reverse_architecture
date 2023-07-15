@@ -1,4 +1,4 @@
-import { DomainError } from '../../error/DomainError'
+import { DomainError } from '../../error/domainError'
 import { WinnerDisc } from '../gameResult/winnerDisc'
 import { Board, initialBoard } from './board'
 import { Disc } from './disc'

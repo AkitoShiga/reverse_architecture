@@ -1,4 +1,4 @@
-import { DomainError } from '../../error/DomainError'
+import { DomainError } from '../../error/domainError'
 
 const MIN_POINT = 0
 const MAX_POINT = 7

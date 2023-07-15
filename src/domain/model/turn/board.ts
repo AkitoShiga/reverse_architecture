@@ -1,4 +1,4 @@
-import { DomainError } from '../../error/DomainError'
+import { DomainError } from '../../error/domainError'
 import { Disc, isOppositeDisc } from './disc'
 import { Move } from './move'
 import { Point } from './point'
